@@ -3,7 +3,7 @@
 const favoriteThings = [
     'Cheesecake',
     'Skiing',
-    'Python',
+    'Sleeping',
 ];
 
 export async function getFavoriteThings() {
