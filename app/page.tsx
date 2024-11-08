@@ -19,8 +19,8 @@ export default function Home() {
   }
   return (
     <main>
-      <h1>Hello Martin!</h1>
-      <h2>Luke&apos;s Favorite Things</h2>
+      <h1>Hello Next.JS!</h1>
+      <h2>My Favorite Things</h2>
       <input
         placeholder="New Favorite Thing"
         value={newFavoriteThing}

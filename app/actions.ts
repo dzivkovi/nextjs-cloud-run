@@ -1,10 +1,9 @@
 'use server'
 
 const favoriteThings = [
-    'Chocolate',
-    'Football',
-    'JavaScript',
-    'Volleyball',
+    'Cheesecake',
+    'Skiing',
+    'Python',
 ];
 
 export async function getFavoriteThings() {
