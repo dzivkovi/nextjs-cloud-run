@@ -40,11 +40,11 @@ For deploying a previously built image:
 
 ```bash
 gcloud builds submit --config=.ci/cloudbuild-deploy.yaml \
-  --substitutions=_SERVICE_NAME=nextjs-cloud-run,\
-  _DEPLOY_REGION=us-central1,\
-  _AR_HOSTNAME=us-central1-docker.pkg.dev,\
-  REPO_NAME=nextjs-cloud-run,\
-  _COMMIT_SHA=$(git rev-parse HEAD || echo 'latest')
+--substitutions=_SERVICE_NAME=nextjs-cloud-run,\
+_DEPLOY_REGION=us-central1,\
+_AR_HOSTNAME=us-central1-docker.pkg.dev,\
+REPO_NAME=nextjs-cloud-run,\
+COMMIT_SHA=$(git rev-parse HEAD || echo 'latest')
 ```
 
 ## Pipeline Stages
@@ -82,6 +82,25 @@ The configurations use various substitutions:
 - `_AR_HOSTNAME`: Artifact Registry hostname
 - `REPO_NAME`: Repository name
 - `_COMMIT_SHA`: Git commit hash (auto-generated)
+
+## Testing Protected Endpoints
+
+If your Cloud Run service requires authentication, you can test it using a bearer token:
+
+```bash
+# Get an identity token for the current user
+TOKEN=$(gcloud auth print-identity-token)
+
+# Get the project number
+export PROJECT_NUMBER=$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')
+
+# Test the endpoint with authentication
+curl -H "Authorization: Bearer $TOKEN" \
+  https://nextjs-cloud-run-$PROJECT_NUMBER.us-central1.run.app/
+
+# Or using your browser, you can run this to open an authenticated session
+gcloud run services browse nextjs-cloud-run --region=us-central1
+```
 
 ## Container Images
 
