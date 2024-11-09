@@ -1,0 +1,38 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$_COMMIT_SHA
+      - >-
+        --labels=commit-sha=$_COMMIT_SHA,gcp-build-id=$BUILD_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - describe
+      - $_SERVICE_NAME
+      - '--region=$_DEPLOY_REGION'
+      - '--format=get(status.url)'
+    id: GetURL
+    entrypoint: gcloud
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _SERVICE_NAME: nextjs-cloud-run
+  _DEPLOY_REGION: us-central1
+  REPO_NAME: nextjs-cloud-run
+  _COMMIT_SHA: latest
